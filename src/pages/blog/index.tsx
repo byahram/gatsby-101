@@ -1,9 +1,9 @@
 import React from "react";
-import Layout from "../components/Layout";
-import Seo from "../components/SEO";
-import { graphql, PageProps } from "gatsby";
+import Layout from "../../components/Layout";
+import Seo from "../../components/SEO";
+import { graphql, Link, PageProps } from "gatsby";
 
-export default function Blog({ data }: PageProps<Queries.BlogTitlesQuery>) {
+export default function Blog({ data }: PageProps<Queries.BlogPostsQuery>) {
   console.log(data);
 
   //   const [blogPosts, setBlogPosts] = useState();
@@ -16,13 +16,15 @@ export default function Blog({ data }: PageProps<Queries.BlogTitlesQuery>) {
       <section>
         {data.allMdx.nodes.map((file, index) => (
           <article key={index}>
-            <h3>{file.frontmatter?.title}</h3>
-            <h5>
-              {file.frontmatter?.author} in : {file.frontmatter?.category}
-            </h5>
-            <h6>{file.frontmatter?.date}</h6>
-            <hr />
-            <p>{file.excerpt}</p>
+            <Link to={`/blog/${file.frontmatter?.slug}`}>
+              <h1>{file.frontmatter?.title}</h1>
+              <h5>
+                {file.frontmatter?.author} in : {file.frontmatter?.category}
+              </h5>
+              <h6>{file.frontmatter?.date}</h6>
+              <hr />
+              <p>{file.excerpt}</p>
+            </Link>
           </article>
         ))}
       </section>
@@ -35,9 +37,10 @@ export const query = graphql`
     allMdx {
       nodes {
         frontmatter {
+          slug
           category
           author
-          data(formatString: "YYYY.MM.DD")
+          date(formatString: "YYYY.MM.DD")
           title
         }
         excerpt(pruneLength: 50)

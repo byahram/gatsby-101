@@ -1,31 +1,26 @@
+import { graphql, Link, PageProps } from "gatsby";
 import React from "react";
 import Layout from "../../components/Layout";
 import Seo from "../../components/SEO";
-import { graphql, Link, PageProps } from "gatsby";
 
-export default function Blog({ data }: PageProps<Queries.BlogPostsQuery>) {
-  console.log(data);
-
-  //   const [blogPosts, setBlogPosts] = useState();
-  //   useEffect(() => {
-  //     fetchBlogPosts();
-  //   }, []);
-
+export default function BlogPage({ data }: PageProps<Queries.BlogPostsQuery>) {
   return (
     <Layout title="Blog">
-      <section>
+      <section className="grid">
         {data.allMdx.nodes.map((file, index) => (
-          <article key={index}>
-            <Link to={`/blog/${file.frontmatter?.slug}`}>
-              <h1>{file.frontmatter?.title}</h1>
-              <h5>
-                {file.frontmatter?.author} in : {file.frontmatter?.category}
-              </h5>
-              <h6>{file.frontmatter?.date}</h6>
-              <hr />
-              <p>{file.excerpt}</p>
-            </Link>
-          </article>
+          <>
+            <article key={index}>
+              <Link to={`/blog/${file.frontmatter?.slug}`}>
+                <h3>{file.frontmatter?.title}</h3>
+                <h5>
+                  {file.frontmatter?.author} in: {file.frontmatter?.category}
+                </h5>
+                <h6>{file.frontmatter?.date}</h6>
+                <p>{file.excerpt}</p>
+              </Link>
+            </article>
+            <hr />
+          </>
         ))}
       </section>
     </Layout>
@@ -34,16 +29,16 @@ export default function Blog({ data }: PageProps<Queries.BlogPostsQuery>) {
 
 export const query = graphql`
   query BlogPosts {
-    allMdx {
+    allMdx(sort: { frontmatter: { date: DESC } }) {
       nodes {
         frontmatter {
-          slug
-          category
-          author
-          date(formatString: "YYYY.MM.DD")
           title
+          author
+          category
+          date(formatString: "YYYY.MM.DD")
+          slug
         }
-        excerpt(pruneLength: 50)
+        excerpt(pruneLength: 25)
       }
     }
   }

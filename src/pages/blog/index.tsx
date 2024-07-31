@@ -19,7 +19,6 @@ export default function BlogPage({ data }: PageProps<Queries.BlogPostsQuery>) {
                 <p>{file.excerpt}</p>
               </Link>
             </article>
-            <hr />
           </>
         ))}
       </section>
